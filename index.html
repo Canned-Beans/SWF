@@ -3,80 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fullscreen SWF Player (Ruffle CDN)</title>
-    
+    <title>SWF Player with Ruffle</title>
+
     <!-- Load Ruffle from CDN -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 
     <style>
         body {
-            margin: 0;
             background: black;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
         }
         #flash-container {
             width: 800px;
             height: 600px;
             background: black;
         }
-        .fullscreen {
-            width: 100vw !important;
-            height: 100vh !important;
-        }
     </style>
 </head>
 <body>
 
     <div id="flash-container">
-        <object id="flash-content" data="dash-or-die-1464705b0.swf" width="800" height="600"></object>
+        <object id="flash-content" data="yourfile.swf" width="800" height="600"></object>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Initialize Ruffle
-            window.RufflePlayer = window.RufflePlayer || {};
             const ruffle = window.RufflePlayer.newest();
             const flashObject = document.getElementById("flash-content");
             const player = ruffle.createPlayer();
             flashObject.replaceWith(player);
-            player.load("yourfile.swf");
+            player.load("dash-or-die-1464705b0.swf"); // Change to your SWF file name
         });
-
-        document.addEventListener("keydown", function(event) {
-            if (event.key === "f") {
-                toggleFullscreen();
-            }
-        });
-
-        function toggleFullscreen() {
-            let container = document.getElementById("flash-container");
-            if (!document.fullscreenElement) {
-                if (container.requestFullscreen) {
-                    container.requestFullscreen();
-                } else if (container.mozRequestFullScreen) { // Firefox
-                    container.mozRequestFullScreen();
-                } else if (container.webkitRequestFullscreen) { // Chrome, Safari, Opera
-                    container.webkitRequestFullscreen();
-                } else if (container.msRequestFullscreen) { // IE/Edge
-                    container.msRequestFullscreen();
-                }
-                container.classList.add("fullscreen");
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-                container.classList.remove("fullscreen");
-            }
-        }
     </script>
 
 </body>
