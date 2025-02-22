@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fullscreen SWF Player</title>
+    <title>Fullscreen SWF Player (Ruffle)</title>
+    <script src="ruffle.js"></script>
     <style>
         body {
             margin: 0;
@@ -16,6 +17,7 @@
         #flash-container {
             width: 800px;
             height: 600px;
+            background: black;
         }
         .fullscreen {
             width: 100vw !important;
@@ -26,7 +28,7 @@
 <body>
 
     <div id="flash-container">
-        <embed id="flash-content" src="dash-or-die-1464705b0.swf" width="800" height="600">
+        <object id="flash-content" data="dash-or-die-1464705b0.swf" width="800" height="600"></object>
     </div>
 
     <script>
@@ -43,7 +45,7 @@
                     container.requestFullscreen();
                 } else if (container.mozRequestFullScreen) { // Firefox
                     container.mozRequestFullScreen();
-                } else if (container.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                } else if (container.webkitRequestFullscreen) { // Chrome, Safari, Opera
                     container.webkitRequestFullscreen();
                 } else if (container.msRequestFullscreen) { // IE/Edge
                     container.msRequestFullscreen();
