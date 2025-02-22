@@ -1,142 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SWF Player with Ruffle</title>
-
-    <!-- Load Ruffle from local directory -->
-    <script src="ruffle/ruffle.js"></script>
-
-    <style>
-        body {
-            background: black;
-            color: white;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        #game-buttons {
-            text-align: center;
-            z-index: 10;
-            position: relative;
-        }
-        button {
-            margin: 10px;
-            padding: 12px;
-            font-size: 18px;
-            cursor: pointer;
-            border: none;
-            background: #444;
-            color: white;
-            border-radius: 5px;
-        }
-        #flash-container {
-            display: none;
-            width: 1280px; /* Fixed width in pixels */
-            height: 720px; /* Fixed height in pixels */
-            background: black;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            overflow: hidden;
-        }
-        #flash-content {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-        #back-link {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            text-decoration: underline;
-            cursor: pointer;
-            font-size: 16px;
-            z-index: 15;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SWF Player with Ruffle</title>
+  <!-- Load Ruffle from local directory -->
+  <script src="ruffle/ruffle.js"></script>
+  <style>
+    body {
+      background: black;
+      color: white;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #game-buttons {
+      text-align: center;
+      z-index: 10;
+      position: relative;
+    }
+    button {
+      margin: 10px;
+      padding: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      border: none;
+      background: #444;
+      color: white;
+      border-radius: 5px;
+    }
+    #flash-container {
+      display: none;
+      width: 1280px;  /* Fixed width in pixels */
+      height: 720px;  /* Fixed height in pixels */
+      background: black;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+    }
+    #back-link {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 16px;
+      z-index: 15;
+    }
+  </style>
 </head>
 <body>
+  <div id="game-buttons"></div> <!-- Buttons appear here -->
+  <div id="flash-container">
+    <div id="flash-content"></div> <!-- Placeholder that will be replaced by the Ruffle player -->
+    <div id="back-link">Back</div> <!-- "Back" button -->
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const response = await fetch("games.json");
+      const games = await response.json();
+      const buttonContainer = document.getElementById("game-buttons");
+      const flashContainer = document.getElementById("flash-container");
+      const backLink = document.getElementById("back-link");
+      const ruffle = window.RufflePlayer.newest();
+      const player = ruffle.createPlayer();
 
-    <div id="game-buttons"></div> <!-- Buttons appear here -->
+      // Explicitly set the player element to fill its container.
+      player.style.width = "100%";
+      player.style.height = "100%";
 
-    <div id="flash-container">
-        <div id="flash-content"></div> <!-- Flash content will be replaced here -->
-        <div id="back-link">Back</div> <!-- Small "Back" button -->
-    </div>
+      // Replace #flash-content with the player.
+      document.getElementById("flash-content").replaceWith(player);
 
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const response = await fetch("games.json");
-            const games = await response.json();
-            const buttonContainer = document.getElementById("game-buttons");
-            const flashContainer = document.getElementById("flash-container");
-            const backLink = document.getElementById("back-link");
-            const ruffle = window.RufflePlayer.newest();
-            const player = ruffle.createPlayer();
+      // Create buttons for each game.
+      games.forEach(game => {
+        const button = document.createElement("button");
+        button.textContent = game.name;
+        button.onclick = () => {
+          buttonContainer.style.display = "none";  // Hide game buttons.
+          flashContainer.style.display = "block";    // Show game container.
+          player.load(game.file);
+        };
+        buttonContainer.appendChild(button);
+      });
 
-            // Create buttons for each game
-            games.forEach(game => {
-                const button = document.createElement("button");
-                button.textContent = game.name;
-                button.onclick = () => {
-                    buttonContainer.style.display = "none"; // Hide buttons
-                    flashContainer.style.display = "block"; // Show game
-                    player.load(game.file);
-                };
-                buttonContainer.appendChild(button);
-            });
+      // Back button function.
+      backLink.onclick = () => {
+        flashContainer.style.display = "none";       // Hide game container.
+        buttonContainer.style.display = "block";       // Show game buttons.
+      };
 
-            // Back button function
-            backLink.onclick = () => {
-                flashContainer.style.display = "none"; // Hide game
-                buttonContainer.style.display = "block"; // Show buttons
-            };
+      // Fullscreen toggle on "F" key press.
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "f" || e.key === "F") {
+          toggleFullscreen();
+        }
+      });
 
-            // Replace #flash-content with Ruffle player
-            document.getElementById("flash-content").replaceWith(player);
-
-            // Fullscreen toggle on "F" key press
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "f" || e.key === "F") {
-                    toggleFullscreen();
-                }
-            });
-
-            // Function to toggle fullscreen mode
-            function toggleFullscreen() {
-                if (!document.fullscreenElement) {
-                    if (flashContainer.requestFullscreen) {
-                        flashContainer.requestFullscreen();
-                    } else if (flashContainer.mozRequestFullScreen) { // Firefox
-                        flashContainer.mozRequestFullScreen();
-                    } else if (flashContainer.webkitRequestFullscreen) { // Chrome, Safari
-                        flashContainer.webkitRequestFullscreen();
-                    } else if (flashContainer.msRequestFullscreen) { // IE/Edge
-                        flashContainer.msRequestFullscreen();
-                    }
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.mozCancelFullScreen) { // Firefox
-                        document.mozCancelFullScreen();
-                    } else if (document.webkitExitFullscreen) { // Chrome, Safari
-                        document.webkitExitFullscreen();
-                    } else if (document.msExitFullscreen) { // IE/Edge
-                        document.msExitFullscreen();
-                    }
-                }
-            }
-        });
-    </script>
-
+      // Function to toggle fullscreen mode.
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          if (flashContainer.requestFullscreen) {
+            flashContainer.requestFullscreen();
+          } else if (flashContainer.mozRequestFullScreen) { // Firefox
+            flashContainer.mozRequestFullScreen();
+          } else if (flashContainer.webkitRequestFullscreen) { // Chrome, Safari
+            flashContainer.webkitRequestFullscreen();
+          } else if (flashContainer.msRequestFullscreen) { // IE/Edge
+            flashContainer.msRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.mozCancelFullScreen) { // Firefox
+            document.mozCancelFullScreen();
+          } else if (document.webkitExitFullscreen) { // Chrome, Safari
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) { // IE/Edge
+            document.msExitFullscreen();
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
