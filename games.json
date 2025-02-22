@@ -1,5 +1,18 @@
 [
+    { "name": "2048", "file": "2048 (1).swf" },
+    { "name": "Bloons Tower Defense 5", "file": "bloons-tower-defense-5.swf" },
+    { "name": "Bonk.io", "file": "bonkio.swf" },
     { "name": "Dash or Die", "file": "dash-or-die-1464705b0.swf" },
-    { "name": "Game 2", "file": "game2.swf" },
-    { "name": "Game 3", "file": "game3.swf" }
+    { "name": "Duck Life 1", "file": "ducklife1.swf" },
+    { "name": "Fireboy and Watergirl in The Light Temple", "file": "Fireboy and Watergirl in The Light Temple.swf" },
+    { "name": "Pac-Man", "file": "pacman.swf" },
+    { "name": "Papa Louie", "file": "papalouie_v2.swf" },
+    { "name": "Papa's Burgeria", "file": "Papas Burgeria.swf" },
+    { "name": "Papa's Freezeria", "file": "Papas Freezeria.swf" },
+    { "name": "Papa's Pancakeria", "file": "Papas Pancakeria.swf" },
+    { "name": "Papa's Pizzeria", "file": "Papas Pizzeria.swf" },
+    { "name": "Papa's Hot Doggeria", "file": "papashotdoggeria.swf" },
+    { "name": "Run 2", "file": "run2.swf" },
+    { "name": "Tetris", "file": "tetris (2).swf" },
+    { "name": "Ultimate Flash Sonic Widescreen", "file": "ultimateflashsonicwidescreen.swf" }
 ]
