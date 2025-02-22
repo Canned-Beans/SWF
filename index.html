@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fullscreen SWF Player (Ruffle)</title>
-    <script src="ruffle/ruffle.js"></script>
+    <title>Fullscreen SWF Player (Ruffle CDN)</title>
+    
+    <!-- Load Ruffle from CDN -->
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+
     <style>
         body {
             margin: 0;
@@ -32,6 +35,16 @@
     </div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initialize Ruffle
+            window.RufflePlayer = window.RufflePlayer || {};
+            const ruffle = window.RufflePlayer.newest();
+            const flashObject = document.getElementById("flash-content");
+            const player = ruffle.createPlayer();
+            flashObject.replaceWith(player);
+            player.load("yourfile.swf");
+        });
+
         document.addEventListener("keydown", function(event) {
             if (event.key === "f") {
                 toggleFullscreen();
