@@ -18,12 +18,27 @@
       height: 100vh;
       overflow: hidden;
     }
+
+    #search-container {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    #game-search {
+      padding: 10px;
+      font-size: 16px;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
     #game-buttons {
       text-align: center;
       z-index: 10;
       position: relative;
-      max-height: 80vh; /* Set a maximum height, adjust as needed */
-      overflow-y: auto; /* Enable vertical scrolling */
+      max-height: 80vh;
+      overflow-y: auto;
       padding: 10px;
     }
 
@@ -37,10 +52,11 @@
       color: white;
       border-radius: 5px;
     }
+
     #flash-container {
       display: none;
-      width: 1280px;  /* Fixed width in pixels */
-      height: 720px;  /* Fixed height in pixels */
+      width: 1280px;
+      height: 720px;
       background: black;
       position: absolute;
       top: 50%;
@@ -48,6 +64,7 @@
       transform: translate(-50%, -50%);
       overflow: hidden;
     }
+
     #back-link {
       position: absolute;
       bottom: 10px;
@@ -62,11 +79,15 @@
   </style>
 </head>
 <body>
+  <div id="search-container">
+    <input type="text" id="game-search" placeholder="Search games..." />
+  </div>
   <div id="game-buttons"></div> <!-- Buttons appear here -->
   <div id="flash-container">
     <div id="flash-content"></div> <!-- Placeholder that will be replaced by the Ruffle player -->
     <div id="back-link">Back</div> <!-- "Back" button -->
   </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       const response = await fetch("games.json");
@@ -74,6 +95,7 @@
       const buttonContainer = document.getElementById("game-buttons");
       const flashContainer = document.getElementById("flash-container");
       const backLink = document.getElementById("back-link");
+      const searchInput = document.getElementById("game-search");
       const ruffle = window.RufflePlayer.newest();
       const player = ruffle.createPlayer();
 
@@ -84,32 +106,47 @@
       // Replace #flash-content with the player.
       document.getElementById("flash-content").replaceWith(player);
 
-      // Create buttons for each game.
-      games.forEach(game => {
-        const button = document.createElement("button");
-        button.textContent = game.name;
-        button.onclick = () => {
-          buttonContainer.style.display = "none";  // Hide game buttons.
-          flashContainer.style.display = "block";    // Show game container.
-          player.load(game.file);
-        };
-        buttonContainer.appendChild(button);
+      // Function to create game buttons
+      const createGameButtons = (filteredGames) => {
+        buttonContainer.innerHTML = ''; // Clear existing buttons
+        filteredGames.forEach(game => {
+          const button = document.createElement("button");
+          button.textContent = game.name;
+          button.onclick = () => {
+            buttonContainer.style.display = "none";  // Hide game buttons.
+            flashContainer.style.display = "block";    // Show game container.
+            player.load(game.file);
+          };
+          buttonContainer.appendChild(button);
+        });
+      };
+
+      // Initially show all games
+      createGameButtons(games);
+
+      // Filter games based on search input
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+        const filteredGames = games.filter(game =>
+          game.name.toLowerCase().includes(query)
+        );
+        createGameButtons(filteredGames); // Show filtered games
       });
 
-      // Back button function.
+      // Back button function
       backLink.onclick = () => {
         flashContainer.style.display = "none";       // Hide game container.
         buttonContainer.style.display = "block";       // Show game buttons.
       };
 
-      // Fullscreen toggle on "F" key press.
+      // Fullscreen toggle on "F" key press
       document.addEventListener("keydown", (e) => {
         if (e.key === "f" || e.key === "F") {
           toggleFullscreen();
         }
       });
 
-      // Function to toggle fullscreen mode.
+      // Function to toggle fullscreen mode
       function toggleFullscreen() {
         if (!document.fullscreenElement) {
           if (flashContainer.requestFullscreen) {
