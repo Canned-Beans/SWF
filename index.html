@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SWF Player with Ruffle</title>
 
-    <!-- Load Ruffle from CDN -->
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <!-- Load Ruffle from local directory -->
+    <script src="ruffle/ruffle.js"></script>
 
     <style>
         body {
@@ -22,6 +22,7 @@
         }
         #game-buttons {
             text-align: center;
+            z-index: 10;
         }
         button {
             margin: 10px;
@@ -61,7 +62,7 @@
     <div id="game-buttons"></div> <!-- Buttons appear here -->
 
     <div id="flash-container">
-        <object id="flash-content"></object>
+        <div id="flash-content"></div> <!-- Flash content will be replaced here -->
         <div id="back-link">Back</div> <!-- Small "Back" button -->
     </div>
 
