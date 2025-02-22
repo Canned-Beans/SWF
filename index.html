@@ -36,12 +36,14 @@
         }
         #flash-container {
             display: none;
-            width: 100%;
-            height: 100%;
+            width: 80%;
+            height: 80%;
             background: black;
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
         }
         #flash-content {
             width: 100%;
@@ -96,7 +98,40 @@
                 buttonContainer.style.display = "block"; // Show buttons
             };
 
+            // Replace #flash-content with Ruffle player
             document.getElementById("flash-content").replaceWith(player);
+
+            // Fullscreen toggle on "F" key press
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "f" || e.key === "F") {
+                    toggleFullscreen();
+                }
+            });
+
+            // Function to toggle fullscreen mode
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    if (flashContainer.requestFullscreen) {
+                        flashContainer.requestFullscreen();
+                    } else if (flashContainer.mozRequestFullScreen) { // Firefox
+                        flashContainer.mozRequestFullScreen();
+                    } else if (flashContainer.webkitRequestFullscreen) { // Chrome, Safari
+                        flashContainer.webkitRequestFullscreen();
+                    } else if (flashContainer.msRequestFullscreen) { // IE/Edge
+                        flashContainer.msRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.mozCancelFullScreen) { // Firefox
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitExitFullscreen) { // Chrome, Safari
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) { // IE/Edge
+                        document.msExitFullscreen();
+                    }
+                }
+            }
         });
     </script>
 
