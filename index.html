@@ -12,10 +12,21 @@
         body {
             background: black;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             margin: 0;
+            color: white;
+        }
+        #game-buttons {
+            margin-bottom: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
         }
         #flash-container {
             width: 800px;
@@ -26,17 +37,28 @@
 </head>
 <body>
 
+    <div id="game-buttons"></div> <!-- Buttons will be added here -->
     <div id="flash-container">
-        <object id="flash-content" data="yourfile.swf" width="800" height="600"></object>
+        <object id="flash-content" width="800" height="600"></object>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
+            const response = await fetch("games.json");
+            const games = await response.json();
+            const buttonContainer = document.getElementById("game-buttons");
             const ruffle = window.RufflePlayer.newest();
             const flashObject = document.getElementById("flash-content");
             const player = ruffle.createPlayer();
             flashObject.replaceWith(player);
-            player.load("dash-or-die-1464705b0.swf"); // Change to your SWF file name
+
+            // Create a button for each game
+            games.forEach(game => {
+                const button = document.createElement("button");
+                button.textContent = game.name;
+                button.onclick = () => player.load(game.file);
+                buttonContainer.appendChild(button);
+            });
         });
     </script>
 
