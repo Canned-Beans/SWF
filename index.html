@@ -37,12 +37,13 @@
         }
         #flash-container {
             display: none;
-            width: 100vw; /* 100% of the viewport width */
-            height: 100vh; /* 100% of the viewport height */
+            width: 1280px; /* Fixed width in pixels */
+            height: 720px; /* Fixed height in pixels */
             background: black;
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             overflow: hidden;
         }
         #flash-content {
